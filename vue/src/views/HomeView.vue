@@ -95,10 +95,10 @@
           </div>
 
           <div class="ma-10" >
-            <el-input style="width: 200px" placeholder="请输入姓名" suffix-icon="el-icon-search"></el-input>
-            <el-input style="width: 200px" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5"></el-input>
-            <el-input style="width: 200px" placeholder="请输入地址" suffix-icon="el-icon-location-information" class="ml-5"></el-input>
-            <el-button class="ml-5" type="primary">搜索</el-button>
+            <el-input style="width: 200px" placeholder="请输入姓名" suffix-icon="el-icon-search" v-model="username"></el-input>
+            <!-- <el-input style="width: 200px" placeholder="请输入邮箱" suffix-icon="el-icon-message" class="ml-5"></el-input>
+            <el-input style="width: 200px" placeholder="请输入地址" suffix-icon="el-icon-location-information" class="ml-5"></el-input> -->
+            <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
           </div>
 
           <div class="ma-10">
@@ -110,12 +110,12 @@
           </div>
 
           <el-table :data="tableData" stripe>
-            <el-table-column prop="date" label="日期" width="140">
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column>
+            <el-table-column prop="id" label="id" width="80"></el-table-column>
+            <el-table-column prop="username" label="用户名" width="140"></el-table-column>
+            <el-table-column prop="nickname" label="昵称" width="120"></el-table-column>
+            <el-table-column prop="email" label="邮箱"></el-table-column>
+            <el-table-column prop="phone" label="电话"></el-table-column>
+            <el-table-column prop="address" label="地址"></el-table-column>
             <el-table-column label="操作">
               <el-button type="success" icon="el-icon-edit">编辑</el-button>
               <el-button type="danger" icon="el-icon-delete">删除</el-button>
@@ -123,10 +123,13 @@
           </el-table>
           <div class="pd-10">
             <el-pagination
-                :page-sizes="[5, 10, 15, 20]"
-                :page-size="10"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pageNum"
+                :page-sizes="[2, 5, 10, 20]"
+                :page-size="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
+                :total="total">
             </el-pagination>
           </div>
         </el-main>
@@ -142,13 +145,13 @@ import HelloWorld from '@/components/HelloWorld.vue'
 export default {
   name: 'HomeView',
   data() {
-    const item = {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    };
+
     return {
-      tableData: Array(20).fill(item),
+      tableData: [],
+      total: 0,
+      pageNum: 1,
+      pageSize: 2,
+      username: '',
       collapaseBtnClass: 'el-icon-s-fold',
       isCollapse: false,
       asideWidth: 200,
@@ -156,6 +159,9 @@ export default {
       logoShow: false,
       smallLogoShow :true,
     }
+  },
+  created(){
+    this.load();
   },
   methods: {
     // 点击收缩整体菜单按钮
@@ -174,6 +180,23 @@ export default {
         this.logoShow = false;
         this.smallLogoShow = true;
       }
+    },
+    handleSizeChange(pageSize){
+        this.pageSize = pageSize;
+        this.load();
+    },
+    handleCurrentChange(pageNum){
+        this.pageNum = pageNum;
+        t.load();
+    },
+    load() {
+      // 请求分页查询数据
+      fetch("http://localhost:9090/user/page?pageNum=" + this.pageNum + "&pageSize=" + this.pageSize +"&username="+this.username).then(res => res.json())
+        .then(res => {
+          console.log(res);
+          this.tableData = res.data;
+          this.total = res.total;
+        })
     }
   }
 }
