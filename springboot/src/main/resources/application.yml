@@ -6,7 +6,10 @@ spring:
     url: jdbc:mysql://localhost:3306/backmanagement
     username: root
     password: root
-mybatis:
-  mapper-locations: classpath:mapper/*.xml #扫描所有mybatis的xml文件
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml #扫描所有mybatis的xml文件
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
