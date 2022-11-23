@@ -8,6 +8,9 @@ import com.jiaxuan.entity.User;
 import com.jiaxuan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -81,9 +84,35 @@ public class UserController {
         return userService.deleteById(id);
     }
 
+    /**
+     * 批量删除
+     * @param stringids
+     * @return
+     */
     @DeleteMapping("del/batch")
     public boolean deleteUsersById(@RequestParam String stringids){
         return userService.deleteByIds(stringids);
+    }
+
+    /**
+     * 文件下载
+     * @param response
+     * @throws Exception
+     */
+    @GetMapping("/export")
+    public boolean export(HttpServletResponse response) throws Exception {
+        return userService.export(response);
+    }
+
+    /**
+     * 文件上传
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/import")
+    public boolean importFile(MultipartFile file) throws Exception {
+        return userService.importFile(file);
     }
 
 }

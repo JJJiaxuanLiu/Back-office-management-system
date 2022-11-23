@@ -14,10 +14,12 @@
         </div>
 
         <div class="ma-10">
-            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd">新增</el-button>
-            <el-button type="danger" icon="el-icon-delete" @click="delBatch">批量删除</el-button>
-            <el-button type="primary" icon="el-icon-download">导入</el-button>
-            <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+            <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd" class="ml-5">新增</el-button>
+            <el-button type="danger" icon="el-icon-delete" @click="delBatch" style="margin-left: 5px">批量删除</el-button>
+            <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block" >
+                <el-button type="primary" icon="el-icon-download" class="ml-5">导入</el-button>
+            </el-upload>
+            <el-button type="primary" icon="el-icon-upload2"  @click="exportFile" class="ml-5">导出</el-button>
 
         </div>
 
@@ -72,6 +74,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -211,8 +215,11 @@ export default {
                     message: '已取消删除'
                 });
             });
+        },
 
-
+        exportFile(){
+             window.open("http://localhost:9090/user/export")
+           
         },
 
         handleSizeChange(pageSize) {
@@ -221,6 +228,10 @@ export default {
         },
         handleCurrentChange(pageNum) {
             this.pageNum = pageNum;
+            this.load();
+        },
+        handleExcelImportSuccess(){
+            this.$message.success("导入成功");
             this.load();
         },
     }

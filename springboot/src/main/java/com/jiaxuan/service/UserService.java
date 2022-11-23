@@ -2,6 +2,11 @@ package com.jiaxuan.service;
 
 import com.jiaxuan.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * <p>
@@ -21,4 +26,8 @@ public interface UserService extends IService<User> {
     boolean deleteById(Integer id);
 
     boolean deleteByIds(String stringids);
+
+    boolean export(HttpServletResponse response) throws Exception;
+
+    boolean importFile(MultipartFile file) throws IOException, Exception;
 }
