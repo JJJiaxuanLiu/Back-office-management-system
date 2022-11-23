@@ -1,47 +1,18 @@
 package com.jiaxuan.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jiaxuan.entity.User;
-import org.apache.ibatis.annotations.*;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
-
+/**
+ * <p>
+ *  Mapper 接口
+ * </p>
+ *
+ * @author jiaxuan
+ * @since 2022-11-22
+ */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-//    /**
-//     * 查全部
-//     * @return
-//     */
-//    @Select("select * from sys_user")
-//    List<User> findAll();
-//
-//    /**
-//     * 新增
-//     * @param user
-//     * @return
-//     */
-//    @Insert("insert into sys_user(username,password,nickname,email,phone,address) " +
-//            "values(#{username},#{password},#{nickname},#{email},#{phone},#{address})")
-//    int insert(User user);
-//
-//    /**
-//     * 更新
-//     * @param user
-//     * @return
-//     */
-//    int update(User user);
-//
-//    /**
-//     * 删除
-//     * @param id
-//     * @return
-//     */
-//    @Delete("delete from sys_user where id = #{id}")
-//    Integer deleteById(@Param("id") Integer id);
-//
-//    @Select("select * from sys_user where username like #{username} limit #{pageNum}, #{pageSize}")
-//    List<User> findPage(Integer pageNum, Integer pageSize, String username);
-//
-//    @Select("select count(*) from sys_user where username like concat('%', #{username}, '%')")
-//    Integer totalPage(String username);
 }

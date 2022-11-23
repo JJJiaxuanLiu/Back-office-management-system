@@ -1,17 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiaxuan.mapper.UserMapper">
 
-    <update id="update">
-        update sys_user
-        <set>
---             如果某项为 null 则不进行更新，而是保持数据库原值;否则将更新
-            <if test="username != null">username = #{username}</if>
-            <if test="nickname != null">nickname = #{nickname}</if>
-            <if test="email != null">email = #{email}</if>
-            <if test="phone != null">phone = #{phone}</if>
-            <if test="address != null">address = #{address}</if>
-        </set>
-        <where>id = #{id}</where>
-    </update>
 </mapper>
