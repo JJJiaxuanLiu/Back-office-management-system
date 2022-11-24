@@ -4,6 +4,7 @@ package com.jiaxuan.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jiaxuan.dto.UserDto;
 import com.jiaxuan.entity.User;
 import com.jiaxuan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/login")
+    public boolean login(@RequestBody UserDto userDto){
+        return userService.login(userDto);
+    }
 
     /**
      * 分页查询

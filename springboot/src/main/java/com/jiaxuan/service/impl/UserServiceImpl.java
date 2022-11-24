@@ -3,6 +3,8 @@ package com.jiaxuan.service.impl;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.jiaxuan.dto.UserDto;
 import com.jiaxuan.entity.User;
 import com.jiaxuan.mapper.UserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -32,12 +33,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean addUser(User user) {
-        return this.save(user);
+        //判断是否数据库中存在相同用户名，不存在才save
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(user.getUsername()!=null,User::getUsername,user.getUsername());
+        User one = this.getOne(queryWrapper);
+        if(one != null){
+            return false;
+        }else{
+            return this.save(user);
+        }
     }
 
     @Override
     public boolean updateUser(User user) {
-        return this.updateById(user);
+        //判断数据库中是否存在相同的用户名，不同才update
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(user.getUsername() != null, User::getUsername, user.getUsername());
+        User one = this.getOne(queryWrapper);
+        if(one != null){
+            return false;
+        }else {
+            return this.updateById(user);
+        }
     }
 
     @Override
@@ -94,6 +111,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<User> list = reader.readAll(User.class);
 //        System.out.println(list);
         return this.saveBatch(list);
+    }
+
+    @Override
+    public boolean login(UserDto userDto) {
+//        根据页面提交的username查询数据库
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(userDto.getUsername() != null, User::getUsername, userDto.getUsername());
+        User user = this.getOne(queryWrapper);
+//        没有查询到登录失败
+        if(user == null){
+            return false;
+        }else{
+            //查询到了，比对密码
+            if(!userDto.getPassword().equals(user.getPassword())){
+               return false;
+            }else {
+                return true;
+            }
+        }
     }
 
 

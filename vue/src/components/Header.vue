@@ -14,7 +14,9 @@
             <span>王小虎</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
             <el-dropdown-menu slot="dropdown" style="width:100px; text-align:center">
                 <el-dropdown-item>个人中心</el-dropdown-item>
-                <el-dropdown-item>退出</el-dropdown-item>
+                <router-link to="/login" style="text-decoration:none">
+                    <el-dropdown-item>退出</el-dropdown-item>
+                </router-link>
             </el-dropdown-menu>
         </el-dropdown>
 
@@ -22,27 +24,30 @@
 </template>
 
 <script>
+import { RouterLink } from 'vue-router';
+
 export default {
-    name:'Header',
+    name: "Header",
     props: {
         collapaseBtnClass: String,
         collapse: Function,
     },
-    computed:{
-        currentPathName(){
+    computed: {
+        currentPathName() {
             return this.$store.state.currentPathName; //需要监听的数据
         }
     },
-    watch:{
-        currentPathName(newVal, oldVal){
-            console.log(newVal)
+    watch: {
+        currentPathName(newVal, oldVal) {
+            console.log(newVal);
         }
     },
     data() {
         return {
-            // currentPathName:''
-        }
-    }
+        // currentPathName:''
+        };
+    },
+    components: { RouterLink }
 }
 
 </script>

@@ -1,5 +1,6 @@
 package com.jiaxuan.service;
 
+import com.jiaxuan.dto.UserDto;
 import com.jiaxuan.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,4 +31,6 @@ public interface UserService extends IService<User> {
     boolean export(HttpServletResponse response) throws Exception;
 
     boolean importFile(MultipartFile file) throws IOException, Exception;
+
+    boolean login(UserDto userDto);
 }

@@ -4,6 +4,8 @@ import cn.hutool.core.annotation.Alias;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -39,6 +41,7 @@ public class User implements Serializable {
      * 密码
      */
       @Alias("密码")
+      @JsonIgnore
       private String password;
 
       /**

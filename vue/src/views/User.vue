@@ -82,7 +82,7 @@ export default {
             tableData: [],
             total: 0,
             pageNum: 1,
-            pageSize: 5,
+            pageSize: 10,
             username: '',
             email: '',
             address: '',
@@ -136,7 +136,8 @@ export default {
                         this.dialogFormVisible = false;
 
                     } else {
-                        this.$message.error("保存失败");
+                        this.$message.error("保存失败,用户名已存在");
+                        this.load();
                     }
                 })
                 this.editSave = false;
@@ -147,7 +148,8 @@ export default {
                         this.dialogFormVisible = false;
                         this.load();
                     } else {
-                        this.$message.error("保存失败");
+                        this.$message.error("保存失败，用户已存在");
+                        this.load();
                     }
                 })
             }
