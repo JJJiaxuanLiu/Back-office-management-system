@@ -2,8 +2,8 @@ package com.jiaxuan.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jiaxuan.commom.Result;
 import com.jiaxuan.dto.UserDto;
 import com.jiaxuan.entity.User;
 import com.jiaxuan.service.UserService;
@@ -29,9 +29,24 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 登录
+     * @param userDto
+     * @return
+     */
     @PostMapping("/login")
-    public boolean login(@RequestBody UserDto userDto){
+    public Result login(@RequestBody UserDto userDto){
         return userService.login(userDto);
+    }
+
+    /**
+     * 注册
+     * @param userDto
+     * @return
+     */
+    @PostMapping("/register")
+    public Result register(@RequestBody UserDto userDto){
+        return userService.register(userDto);
     }
 
     /**
@@ -65,7 +80,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public boolean addUser(@RequestBody User user){
+    public Boolean addUser(@RequestBody User user){
         return userService.addUser(user);
     }
 
@@ -75,7 +90,7 @@ public class UserController {
      * @return
      */
     @PutMapping
-    public boolean editUser(@RequestBody User user){
+    public Boolean editUser(@RequestBody User user){
         return userService.updateUser(user);
     }
 
@@ -85,7 +100,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public boolean deleteUserById(@PathVariable Integer id){
+    public Boolean deleteUserById(@PathVariable Integer id){
         return userService.deleteById(id);
     }
 
@@ -95,7 +110,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("del/batch")
-    public boolean deleteUsersById(@RequestParam String stringids){
+    public Boolean deleteUsersById(@RequestParam String stringids){
         return userService.deleteByIds(stringids);
     }
 
@@ -105,7 +120,7 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping("/export")
-    public boolean export(HttpServletResponse response) throws Exception {
+    public Boolean export(HttpServletResponse response) throws Exception {
         return userService.export(response);
     }
 
@@ -116,8 +131,13 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping("/import")
-    public boolean importFile(MultipartFile file) throws Exception {
+    public Boolean importFile(MultipartFile file) throws Exception {
         return userService.importFile(file);
+    }
+
+    @GetMapping("/username/{username}")
+    public Result showInfo(@PathVariable String username){
+        return userService.showInfo(username);
     }
 
 }

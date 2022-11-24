@@ -11,12 +11,15 @@
 
         </div>
         <el-dropdown style="width: 70px; cursor: pointer">
-            <span>王小虎</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
+            <span>{{user.nickname}}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
             <el-dropdown-menu slot="dropdown" style="width:100px; text-align:center">
-                <el-dropdown-item>个人中心</el-dropdown-item>
-                <router-link to="/login" style="text-decoration:none">
-                    <el-dropdown-item>退出</el-dropdown-item>
-                </router-link>
+                <el-dropdown-item>
+                    <router-link to="/person">个人中心</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                    <span style="text-decoration:none" @click="logout">退出</span>
+                </el-dropdown-item>
+                    
             </el-dropdown-menu>
         </el-dropdown>
 
@@ -24,7 +27,7 @@
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
+import { RouterLink, RouterView } from 'vue-router';
 
 export default {
     name: "Header",
@@ -44,10 +47,17 @@ export default {
     },
     data() {
         return {
-        // currentPathName:''
+        user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
         };
     },
-    components: { RouterLink }
+    methods:{
+        logout(){
+            this.$router.push("/login")
+            localStorage.removeItem("user");
+            this.$message.success("退出成功！");
+        }
+    },
+    components: { RouterLink, RouterView }
 }
 
 </script>

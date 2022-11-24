@@ -1,5 +1,6 @@
 package com.jiaxuan.service;
 
+import com.jiaxuan.commom.Result;
 import com.jiaxuan.dto.UserDto;
 import com.jiaxuan.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -32,5 +33,9 @@ public interface UserService extends IService<User> {
 
     boolean importFile(MultipartFile file) throws IOException, Exception;
 
-    boolean login(UserDto userDto);
+    Result login(UserDto userDto);
+
+    Result register(UserDto userDto);
+
+    Result showInfo(String username);
 }

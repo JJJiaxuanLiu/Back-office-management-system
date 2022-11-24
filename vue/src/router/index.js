@@ -15,6 +15,7 @@ const routes = [
     children: [
       {path: 'home',name: 'Home',component: () => import('../views/Home.vue'),},
       {path: 'user',name: 'User',component: () => import('../views/User.vue'),},
+      {path: 'person',name: '个人中心',component: () => import('../views/Person.vue'),},
     ]
   },
   {
@@ -30,7 +31,12 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue')
-  }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/Register.vue')
+  },
 ]
 
 const router = new VueRouter({

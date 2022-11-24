@@ -4,11 +4,16 @@ import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.jiaxuan.commom.Constants;
+import com.jiaxuan.commom.Result;
 import com.jiaxuan.dto.UserDto;
 import com.jiaxuan.entity.User;
+import com.jiaxuan.exception.ServiceException;
 import com.jiaxuan.mapper.UserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jiaxuan.service.UserService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -114,21 +119,56 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean login(UserDto userDto) {
+    public Result login(UserDto userDto) {
 //        根据页面提交的username查询数据库
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(userDto.getUsername() != null, User::getUsername, userDto.getUsername());
+        queryWrapper.eq(StringUtils.isNotEmpty(userDto.getUsername()), User::getUsername, userDto.getUsername());
         User user = this.getOne(queryWrapper);
 //        没有查询到登录失败
         if(user == null){
-            return false;
+            throw new ServiceException(Constants.CODE_600,"用户名不存在");
         }else{
             //查询到了，比对密码
             if(!userDto.getPassword().equals(user.getPassword())){
-               return false;
+                throw new ServiceException(Constants.CODE_600, "密码错误");
             }else {
-                return true;
+                BeanUtils.copyProperties(user,userDto);
+                return Result.success("登录成功！",userDto);
             }
+        }
+    }
+
+    @Override
+    public Result register(UserDto userDto) {
+//        根据页面提交的username查询数据库
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(userDto.getUsername()), User::getUsername, userDto.getUsername());
+        User user = this.getOne(queryWrapper);
+//        查到相同用户名，抛出异常
+        if(user != null){
+            throw new ServiceException(Constants.CODE_600,"用户名已存在");
+        }else{
+            //用户名不存在，校验密码是否存在，存在则插入数据库,不存在则抛出异常
+            if(StringUtils.isNotEmpty(userDto.getPassword())){
+                user = new User();
+                BeanUtils.copyProperties(userDto,user);
+                this.save(user);
+                return Result.success("注册成功！", userDto);
+            }else {
+                throw new ServiceException(Constants.CODE_500,"密码不存在");
+            }
+        }
+    }
+
+    @Override
+    public Result showInfo(String username) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(username), User::getUsername, username);
+        User one = this.getOne(queryWrapper);
+        if(one != null){
+            return Result.success(one);
+        }else {
+            throw new ServiceException(Constants.CODE_500,"系统异常");
         }
     }
 
