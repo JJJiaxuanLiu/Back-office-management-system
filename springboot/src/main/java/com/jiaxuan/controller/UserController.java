@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 /**
@@ -28,6 +29,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private List<User> users;
 
     /**
      * 登录
@@ -80,7 +83,7 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public Boolean addUser(@RequestBody User user){
+    public Result addUser(@RequestBody User user){
         return userService.addUser(user);
     }
 
@@ -90,7 +93,7 @@ public class UserController {
      * @return
      */
     @PutMapping
-    public Boolean editUser(@RequestBody User user){
+    public Result editUser(@RequestBody User user){
         return userService.updateUser(user);
     }
 
@@ -100,7 +103,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public Boolean deleteUserById(@PathVariable Integer id){
+    public Result deleteUserById(@PathVariable Integer id){
         return userService.deleteById(id);
     }
 
@@ -110,7 +113,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("del/batch")
-    public Boolean deleteUsersById(@RequestParam String stringids){
+    public Result deleteUsersById(@RequestParam String stringids){
         return userService.deleteByIds(stringids);
     }
 
@@ -120,7 +123,7 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping("/export")
-    public Boolean export(HttpServletResponse response) throws Exception {
+    public Result export(HttpServletResponse response) throws Exception {
         return userService.export(response);
     }
 
@@ -131,10 +134,22 @@ public class UserController {
      * @throws Exception
      */
     @PostMapping("/import")
-    public Boolean importFile(MultipartFile file) throws Exception {
-        return userService.importFile(file);
+    public Result importFile(MultipartFile file) throws Exception {
+        List<User> users = userService.importFile(file);
+        this.users = users;
+        return Result.success();
     }
 
+    @PostMapping("/importcheck")
+    public Result checkFile()  {
+        return userService.checkFile(users);
+    }
+
+    /**
+     * 个人中心信息回显
+     * @param username
+     * @return
+     */
     @GetMapping("/username/{username}")
     public Result showInfo(@PathVariable String username){
         return userService.showInfo(username);

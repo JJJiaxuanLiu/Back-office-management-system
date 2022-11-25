@@ -37,46 +37,49 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Override
-    public boolean addUser(User user) {
+    public Result addUser(User user) {
         //判断是否数据库中存在相同用户名，不存在才save
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(user.getUsername()!=null,User::getUsername,user.getUsername());
         User one = this.getOne(queryWrapper);
         if(one != null){
-            return false;
+            return Result.error("600","用户名已存在！");
         }else{
-            return this.save(user);
+            return Result.success("保存成功！",this.save(user));
         }
     }
 
     @Override
-    public boolean updateUser(User user) {
+    public Result updateUser(User user) {
         //判断数据库中是否存在相同的用户名，不同才update
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(user.getUsername() != null, User::getUsername, user.getUsername());
         User one = this.getOne(queryWrapper);
         if(one != null){
-            return false;
+            return Result.error("600","用户名已存在！");
         }else {
-            return this.updateById(user);
+            return Result.success("修改成功！",this.updateById(user));
         }
     }
 
     @Override
-    public boolean deleteById(Integer id) {
-        return this.removeById(id);
+    public Result deleteById(Integer id) {
+        return Result.success(this.removeById(id));
     }
 
     @Override
-    public boolean deleteByIds(String stringids) {
+    public Result deleteByIds(String stringids) {
+        if(StringUtils.isEmpty(stringids)){
+            throw new ServiceException(Constants.CODE_600,"选择用户为空");
+        }
         String[] split = stringids.split(",");
         ArrayList<String> list = new ArrayList<>(split.length);
         Collections.addAll(list, split);
-        return this.removeByIds(list);
+        return Result.success(this.removeByIds(list));
     }
 
     @Override
-    public boolean export(HttpServletResponse response) throws Exception {
+    public Result export(HttpServletResponse response) throws Exception {
         //从数据库查询出所有的数据
         List<User> list = this.list();
         //通过工具类创建writer写出到磁盘路径
@@ -106,16 +109,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         excelWriter.flush(out,true);
         out.close();
         excelWriter.close();
-        return true;
+        return Result.success();
     }
 
     @Override
-    public boolean importFile(MultipartFile file) throws Exception {
+    public List<User> importFile(MultipartFile file) throws Exception {
         InputStream inputStream = file.getInputStream();
         ExcelReader reader = ExcelUtil.getReader(inputStream);
         List<User> list = reader.readAll(User.class);
-//        System.out.println(list);
-        return this.saveBatch(list);
+        System.out.println(list);
+        return list;
+
+    }
+    @Override
+    public Result checkFile(List<User> users) {
+        //判断导入的名字是否有重复
+        for (int i = 0; i < users.size()-1; i++) {
+            for (int j = i+1; j < users.size(); j++) {
+                if(users.get(i).getUsername().equals(users.get(j).getUsername())){
+                    throw new ServiceException(Constants.CODE_600,"导入的用户名不能重复！");
+                }
+            }
+        }
+        System.out.println("wowowowowoowowowowowowowowowowowo");
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        for (User user : users) {
+//        判断用户名是否为空,
+            if(StringUtils.isEmpty(user.getUsername())){
+                throw new ServiceException(Constants.CODE_600,"用户名不能为空");
+            }
+
+//         判断导入的用户名是否与数据库中的名字重复，
+            queryWrapper.eq(StringUtils.isNotEmpty(user.getUsername()),User::getUsername,user.getUsername());
+            User one = this.getOne(queryWrapper);
+            if(one != null){
+                throw new ServiceException(Constants.CODE_600,"用户名已存在！");
+            }
+
+        }
+        return Result.success(this.saveBatch(users));
     }
 
     @Override
@@ -171,6 +203,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new ServiceException(Constants.CODE_500,"系统异常");
         }
     }
+
+
 
 
 }

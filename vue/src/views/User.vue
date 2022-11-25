@@ -16,7 +16,8 @@
         <div class="ma-10">
             <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd" class="ml-5">新增</el-button>
             <el-button type="danger" icon="el-icon-delete" @click="delBatch" style="margin-left: 5px">批量删除</el-button>
-            <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block" >
+            <el-upload action="http://localhost:9090/user/import" :show-file-list="false" accept="xlsx" 
+            :on-success="handleExcelImportSuccess" style="display: inline-block" >
                 <el-button type="primary" icon="el-icon-download" class="ml-5">导入</el-button>
             </el-upload>
             <el-button type="primary" icon="el-icon-upload2"  @click="exportFile" class="ml-5">导出</el-button>
@@ -89,7 +90,7 @@ export default {
             dialogFormVisible: false,
             form: {},
             multipleSelection: [],
-            editSave: false,
+            newUserFlag: false,
         }
     },
 
@@ -126,29 +127,31 @@ export default {
         handleAdd() {
             this.dialogFormVisible = true;
             this.form = {};
+            this.newUserFlag = true;
         },
 
         save() {
-            if (this.editSave) {
+            if (!this.newUserFlag) {
                 this.request.put("/user", this.form).then(res => {
-                    if (res) {
-                        this.$message.success("保存成功");
+                    if (res.code ==='200') {
+                        this.$message.success(res.msg);
                         this.dialogFormVisible = false;
-
+                        this.load();
                     } else {
-                        this.$message.error("保存失败,用户名已存在");
+                        this.$message.error(res.msg);
                         this.load();
                     }
                 })
-                this.editSave = false;
+                
             } else {
                 this.request.post("/user", this.form).then(res => {
-                    if (res) {
-                        this.$message.success("保存成功");
+                    this.newUserFlag = false;
+                    if (res.code === '200') {
+                        this.$message.success(res.msg);
                         this.dialogFormVisible = false;
                         this.load();
                     } else {
-                        this.$message.error("保存失败，用户已存在");
+                        this.$message.error(res.msg);
                         this.load();
                     }
                 })
@@ -160,7 +163,6 @@ export default {
         handleEdit(row) {
             this.form = row;
             this.dialogFormVisible = true;
-            this.editSave = true;
         },
 
         handleDelete(id) {
@@ -170,11 +172,11 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.request.delete("/user/" + id);
-                this.load();
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
                 });
+                this.load();
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -185,11 +187,11 @@ export default {
 
         handleSelectionChange(val) {
             this.multipleSelection = val;
-            console.log(val);
+            console.log("val="+val);
         },
 
         delBatch() {
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -205,18 +207,25 @@ export default {
                     params: {
                         stringids: batchid
                     }
+                }).then(res => {
+                    if(res.code === '600'){
+                        this.$message.error(res.msg);
+                    }else if(res.code == '200'){
+                        this.$message.success("删除成功！");
+                        this.load();
+                    }
                 });
-                this.load();
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
+                // this.load();
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
                 });
-            });
+            }); 
         },
 
         exportFile(){
@@ -233,8 +242,18 @@ export default {
             this.load();
         },
         handleExcelImportSuccess(){
-            this.$message.success("导入成功");
-            this.load();
+            this.$message.success("文件上传成功，校验中...");
+            this.checkFile();
+        },
+        checkFile(){
+            this.request.post("/user/importcheck").then(res =>{
+                if(res.code === '200'){
+                    this.$message.success("文件校验成功，已上传！");
+                    this.load();
+                }else{
+                    this.$message.error(res.msg);
+                }
+            })
         },
     }
 }

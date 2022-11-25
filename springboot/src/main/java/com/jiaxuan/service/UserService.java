@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * <p>
@@ -21,21 +22,23 @@ import java.io.UnsupportedEncodingException;
 
 public interface UserService extends IService<User> {
 
-    boolean addUser(User user);
+    Result addUser(User user);
 
-    boolean updateUser(User user);
+    Result updateUser(User user);
 
-    boolean deleteById(Integer id);
+    Result deleteById(Integer id);
 
-    boolean deleteByIds(String stringids);
+    Result deleteByIds(String stringids);
 
-    boolean export(HttpServletResponse response) throws Exception;
+    Result export(HttpServletResponse response) throws Exception;
 
-    boolean importFile(MultipartFile file) throws IOException, Exception;
+    List<User> importFile(MultipartFile file) throws  Exception;
 
     Result login(UserDto userDto);
 
     Result register(UserDto userDto);
 
     Result showInfo(String username);
+
+    Result checkFile(List<User> users);
 }
