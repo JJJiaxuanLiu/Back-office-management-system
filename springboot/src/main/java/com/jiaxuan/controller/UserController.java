@@ -140,6 +140,10 @@ public class UserController {
         return Result.success();
     }
 
+    /**
+     * 文件上传用户名校验
+     * @return
+     */
     @PostMapping("/importcheck")
     public Result checkFile()  {
         return userService.checkFile(users);

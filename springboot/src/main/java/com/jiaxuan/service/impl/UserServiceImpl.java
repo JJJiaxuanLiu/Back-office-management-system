@@ -12,6 +12,7 @@ import com.jiaxuan.exception.ServiceException;
 import com.jiaxuan.mapper.UserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jiaxuan.service.UserService;
+import com.jiaxuan.utils.TokenUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -131,7 +132,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 }
             }
         }
-        System.out.println("wowowowowoowowowowowowowowowowowo");
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         for (User user : users) {
 //        判断用户名是否为空,
@@ -165,6 +165,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new ServiceException(Constants.CODE_600, "密码错误");
             }else {
                 BeanUtils.copyProperties(user,userDto);
+                //生成设置token
+                String token = TokenUtils.generateToken(user.getId().toString(), user.getUsername());
+                userDto.setToken(token);
                 return Result.success("登录成功！",userDto);
             }
         }
