@@ -51,7 +51,7 @@
         <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="50%">
             <el-form :model="form" label-width="120px" size="small">
                 <el-form-item label="用户名">
-                    <el-input v-model="form.username" autocomplete="off"></el-input>
+                    <el-input v-model="form.username" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="昵称">
                     <el-input v-model="form.nickname" autocomplete="off"></el-input>
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+
 
 export default {
     data() {
@@ -171,12 +171,15 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.request.delete("/user/" + id);
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-                this.load();
+                this.request.delete("/user/" + id).then(res => {
+                    if(res.code === '200'){
+                        this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                        });
+                        this.load();
+                    }
+                })
             }).catch(() => {
                 this.$message({
                     type: 'info',

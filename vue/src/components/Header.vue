@@ -11,7 +11,11 @@
 
         </div>
         <el-dropdown style="width: 150px; cursor: pointer; text-align: right;">
-            <span>{{user.nickname}}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
+            <div style="display: inline-block">
+                <img :src="user.avatarUrl" alt=""
+                        style="width: 30px; height: 30px; border-radius: 30%; position:relative; top:8px; right:5px">
+                <span>{{user.nickname}}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
+            </div>
             <el-dropdown-menu slot="dropdown" style="width:100px; text-align:center">
                 <el-dropdown-item>
                     <router-link to="/person">个人中心</router-link>

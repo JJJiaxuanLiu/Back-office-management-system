@@ -74,4 +74,10 @@ public class User implements Serializable {
       @Alias("创建时间")
       private LocalDateTime createTime;
 
+      /**
+      * 用户头像url
+      */
+      @Alias("用户头像url")
+      private String avatarUrl;
+
 }

@@ -15,6 +15,7 @@ import com.jiaxuan.service.UserService;
 import com.jiaxuan.utils.TokenUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +38,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public Result addUser(User user) {
         //判断是否数据库中存在相同用户名，不存在才save
@@ -52,15 +55,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public Result updateUser(User user) {
-        //判断数据库中是否存在相同的用户名，不同才update
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(user.getUsername() != null, User::getUsername, user.getUsername());
-        User one = this.getOne(queryWrapper);
-        if(one != null){
-            return Result.error("600","用户名已存在！");
-        }else {
-            return Result.success("修改成功！",this.updateById(user));
-        }
+//        //判断数据库中是否存在相同的用户名，不同才update
+//        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(user.getUsername() != null, User::getUsername, user.getUsername());
+//        User one = this.getOne(queryWrapper);
+//        if(one != null){
+//            return Result.error("600","用户名已存在！");
+//        }else {
+//            return Result.success("修改成功！",this.updateById(user));
+//        }
+        if(user != null){
+            this.updateById(user);
+            return Result.success("修改成功！");
+        }else return Result.error(Constants.CODE_401,"用户不存在！");
     }
 
     @Override
