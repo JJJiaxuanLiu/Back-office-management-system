@@ -38,6 +38,7 @@ export default {
     props: {
         collapaseBtnClass: String,
         collapse: Function,
+        user: Object,
     },
     computed: {
         currentPathName() {
@@ -51,7 +52,7 @@ export default {
     },
     data() {
         return {
-        user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+        /* user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}, */
         };
     },
     methods:{

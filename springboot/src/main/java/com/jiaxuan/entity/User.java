@@ -10,6 +10,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -72,7 +73,7 @@ public class User implements Serializable {
      * 创建时间
      */
       @Alias("创建时间")
-      private LocalDateTime createTime;
+      private Date createTime;
 
       /**
       * 用户头像url

@@ -7,12 +7,12 @@
 
       <el-container>
         <el-header style=" border-bottom: 1px solid #ccc; ">
-          <Header :collapaseBtnClass="collapaseBtnClass" :collapse="collapse"></Header>
+          <Header :collapaseBtnClass="collapaseBtnClass" :collapse="collapse" :user="user"></Header>
         </el-header>
 
         <el-main>
           <!-- 表示当前页面的子路由会在<router-view/>中展示 -->
-          <router-view/>
+          <router-view @refreshUser="getUser"/>
 
         </el-main>
       </el-container>
@@ -34,6 +34,7 @@ export default {
       textShow: true,
       logoShow: false,
       smallLogoShow: true,
+      user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
       
     }
   },
@@ -41,6 +42,10 @@ export default {
   components:{
     Aside,
     Header
+  },
+  created() {
+    //从后台获取最新数据
+    this.getUser();
   },
 
   methods: {
@@ -60,6 +65,14 @@ export default {
         this.logoShow = false;
         this.smallLogoShow = true;
       }
+    },
+
+    getUser() {
+      //从后台获取user
+      this.request.get("/user/username/"+ this.user.username).then(res => {
+        //给user重新赋值
+      this.user = res.data;
+      });
     },
 
 

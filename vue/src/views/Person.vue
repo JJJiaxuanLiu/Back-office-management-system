@@ -54,10 +54,14 @@ export default {
             this.request.put("/user", this.form).then(res => {
                 if (res.code === '200') {
                     this.$message.success("保存成功");
-                    this.getUser().then(res =>{
-                        res.token = JSON.parse(localStorage.getItem('user')).token
-                        localStorage.setItem('user', JSON.stringify(res))
-                    });
+                    //触发父级manage更新user方法
+                    this.$emit('refreshUser');
+
+                    // this.getUser().then(res => {
+                    //     res.token = JSON.parse(localStorage.getItem(res)).token;
+                    //     localStorage.setItem('user', JSON.stringify(res));
+                    // })
+                   
                 } else {
                     this.$message.error("保存失败");
                     this.getUser();
