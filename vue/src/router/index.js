@@ -15,6 +15,8 @@ const routes = [
     children: [
       {path: 'home',name: 'Home',component: () => import('../views/Home.vue'),},
       {path: 'user',name: 'User',component: () => import('../views/User.vue'),},
+      {path: 'role',name: '角色管理',component: () => import('../views/Role.vue'),},
+      {path: 'menu',name: '菜单管理',component: () => import('../views/Menu.vue'),},
       {path: 'person',name: '个人中心',component: () => import('../views/Person.vue'),},
       {path: 'file',name: '文件管理',component: () => import('../views/File.vue'),},
     ]

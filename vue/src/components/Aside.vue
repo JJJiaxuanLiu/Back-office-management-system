@@ -25,7 +25,13 @@
                 <el-menu-item index="/user" class="el-icon-user">用户管理</el-menu-item>
             </el-menu-item-group>
             <el-menu-item-group>
+                <el-menu-item index="/role" class="el-icon-user">角色管理</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
                 <el-menu-item index="/file" class="el-icon-document">文件管理</el-menu-item>
+            </el-menu-item-group>
+            <el-menu-item-group>
+                <el-menu-item index="/menu" class="el-icon-menu">菜单管理</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
     </el-menu>
