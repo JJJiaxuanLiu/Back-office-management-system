@@ -15,4 +15,6 @@ public interface Constants {
 
     //其他业务异常
     String CODE_600 = "600";
+
+    String DICT_ICON = "icon";
 }

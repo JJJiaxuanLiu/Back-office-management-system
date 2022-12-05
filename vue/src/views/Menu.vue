@@ -30,7 +30,11 @@
             <el-table-column prop="id" label="id" width="180"></el-table-column>
             <el-table-column prop="name" label="名称" ></el-table-column>
             <el-table-column prop="path" label="路径" ></el-table-column>
-            <el-table-column prop="icon" label="图标" ></el-table-column>
+            <el-table-column label="图标" class-name="fontSize18" align="center" label-class-name="fontSize12">
+                <template slot-scope="scope">
+                    <i :class="scope.row.icon"></i>
+                </template>
+            </el-table-column>
             <el-table-column prop="description" label="描述" ></el-table-column>
             <el-table-column label="操作" width="300"> 
                 <template slot-scope="scope">
@@ -57,7 +61,14 @@
                     <el-input v-model="form.path" autocomplete="off" ></el-input>
                 </el-form-item>
                 <el-form-item label="图标">
-                    <el-input v-model="form.icon" autocomplete="off" ></el-input>
+                    <template slot-scope="scope">
+                        <el-select clearable v-model="form.icon" placehoder="请选择" style="width:100%">
+                            <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.value">
+                                <i :class="item.value" />{{item.name}}
+                            </el-option>
+                        </el-select>
+                    </template>
+                    <!-- <el-input v-model="form.icon" autocomplete="off" ></el-input> -->
                 </el-form-item>
                 <el-form-item label="描述">
                     <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -84,6 +95,7 @@ export default {
             form: {},
             multipleSelection: [],
             newUserFlag: false,
+            options: [],
         }
     },
 
@@ -149,6 +161,9 @@ export default {
         handleEdit(row) {
             this.form = row;
             this.dialogFormVisible = true;
+            this.request.get('/dict/icons').then(res => {
+                this.options = res.data
+            })
         },
 
         //传过来的菜单id，成为子菜单的pid
@@ -257,3 +272,13 @@ export default {
     }
 }
 </script>
+
+<style>
+.fontSize18{
+    font-size: 18px;
+}
+
+.fontSize12{
+    font-size: 12px;
+}
+</style>

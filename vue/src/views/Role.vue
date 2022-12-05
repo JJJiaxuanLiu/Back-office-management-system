@@ -62,11 +62,15 @@
         </el-dialog>
 
         <el-dialog title="角色菜单分配" :visible.sync="menuFormVisible" width="50%">
-            <el-tree :props="props" :data="menuData" show-checkbox @check-change="handleCheckChange">
+            <el-tree :props="props" :data="menuData" show-checkbox node-key="id" ref="tree" :default-expanded-keys="expands"
+                :default-checked-keys="checks">
+                <span class="custom-tree-node" slot-scope="{ node, data }">
+                    <span><i :class="data.icon"></i> {{ data.name }}</span>
+                </span>
             </el-tree>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="menuFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="save">确 定</el-button>
+                <el-button type="primary" @click="saveRoleMenu">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -93,6 +97,10 @@ export default {
             props: {
                 label: 'name',
             },
+            expands: [],
+            checks: [],
+            roleId: 0,
+
 
 
         }
@@ -163,6 +171,18 @@ export default {
 
         },
 
+        saveRoleMenu(){
+            this.request.post("/rolemenu/"+ this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
+                console.log(res);
+                if(res.code === '200'){
+                    this.$message.success("菜单绑定成功！")
+                    this.menuFormVisible = false;
+                }else{
+                    this.$message.error(res.msg)
+                }
+            })
+        },
+
         handleEdit(row) {
             this.form = row;
             this.dialogFormVisible = true;
@@ -170,16 +190,23 @@ export default {
 
         handleMenu(roleId){
             this.menuFormVisible = true;
+            this.roleId = roleId;
               //请求菜单数据
               this.request.get("/menu").then(res => {
                 this.menuData = res.data;
+                //把后台返回的菜单数据处理成id数组
+                this.expands = this.menuData.map(v => v.id);
             })
+
+            //回显菜单数据
+            this.request.get("/rolemenu/"+ this.roleId).then(res => {
+                console.log(res);
+                this.checks = res.data;
+            })
+
             
         },
 
-        handleCheckChange(data, checked, indeterminate) {
-            console.log(data, checked, indeterminate);
-        },
 
         handleDelete(id) {
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
