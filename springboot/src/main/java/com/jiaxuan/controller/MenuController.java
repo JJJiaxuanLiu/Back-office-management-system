@@ -99,6 +99,11 @@ public class MenuController {
 
     }
 
+    @GetMapping("/ids")
+    public Result findAllIds(){
+        return Result.success(menuService.list().stream().map(Menu::getId));
+    }
+
 
 }
 

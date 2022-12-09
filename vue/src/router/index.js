@@ -17,6 +17,11 @@ const routes = [
   },
 
   {
+    path: '*',
+    name: '404',
+    component: () => import('../views/404.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue')
@@ -35,11 +40,12 @@ const router = new VueRouter({
   routes
 })
 
+//刷新页面会导致路由重置
 export const setRoutes = () => {
   const storeMenus = localStorage.getItem("menus");
   if(storeMenus){
     //拼装动态路由
-    const manageRoute = {path: '/', component: () => import('../views/Manage.vue'), redirect: '/home', children: []}
+    const manageRoute = {path: '/', name: 'Manage', component: () => import('../views/Manage.vue'), redirect: '/home', children: []}
     const menus = JSON.parse(storeMenus)
     menus.forEach(item => {
       //当path不为null的时候才去设置
@@ -55,10 +61,19 @@ export const setRoutes = () => {
         })
       }
     })
-    //动态添加到现在的对象中去
-    router.addRoute(manageRoute)
+    // router.addRoute(manageRoute)
+
+    //获取当前的路由对象名称数组
+    const currentRouteNames = router.getRoutes().map(v => v.name)
+    if(!currentRouteNames.includes('Manage')){
+      //动态添加到现在的对象中去
+      router.addRoute(manageRoute)
+    }
+    
   }
 }
+// 重置一次set一次路由
+setRoutes()
 
 // //动态路由
 // router.addRoute(  {
