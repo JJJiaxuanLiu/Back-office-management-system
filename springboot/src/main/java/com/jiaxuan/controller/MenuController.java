@@ -30,7 +30,7 @@ public class MenuController {
      */
     @GetMapping
     public Result getAllMenus(@RequestParam(defaultValue = "")String name){
-        return menuService.getAllMenus(name);
+        return Result.success(menuService.getAllMenus(name));
     }
 
     /**

@@ -32,10 +32,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     private MenuMapper menuMapper;
 
     @Override
-    public Result getAllMenus(String name) {
+    public List<Menu> getAllMenus(String name) {
         //条件查询
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(name != null, Menu::getName, name);
+        if(StringUtils.isNotBlank(name)){
+            queryWrapper.like(Menu::getName, name);
+        }
         List<Menu> list = menuMapper.selectList(queryWrapper);
         //查询pid为null 的一级父级菜单
         List<Menu> parentNode = list.stream().filter(menu -> menu.getPId() == null).collect(Collectors.toList());
@@ -46,7 +48,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
         }
 
-        return Result.success(parentNode);
+        return parentNode;
     }
 
     @Override

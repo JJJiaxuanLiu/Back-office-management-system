@@ -28,8 +28,9 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="id" width="180"></el-table-column>
             <el-table-column prop="name" label="角色名称" ></el-table-column>
+            <el-table-column prop="flag" label="唯一标识" ></el-table-column>
             <el-table-column prop="description" label="描述" ></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                     <el-button type="info" icon="el-icon-menu" @click="handleMenu(scope.row.id)">分配菜单</el-button>
                     <el-button type="success" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
@@ -49,6 +50,9 @@
             <el-form :model="form" label-width="120px" size="small">
                 <el-form-item label="角色名称">
                     <el-input v-model="form.name" autocomplete="off" ></el-input>
+                </el-form-item>
+                <el-form-item label="唯一标识">
+                    <el-input v-model="form.flag" autocomplete="off" ></el-input>
                 </el-form-item>
                 <el-form-item label="描述">
                     <el-input v-model="form.description" autocomplete="off"></el-input>
@@ -172,7 +176,8 @@ export default {
         },
 
         saveRoleMenu(){
-            this.request.post("/rolemenu/"+ this.roleId, this.$refs.tree.getCheckedKeys()).then(res => {
+           
+            this.request.post("/rolemenu/"+ this.roleId, this.$refs.tree.getCheckedKeys() .concat(this.$refs.tree.getHalfCheckedKeys())).then(res => {
                 console.log(res);
                 if(res.code === '200'){
                     this.$message.success("菜单绑定成功！")

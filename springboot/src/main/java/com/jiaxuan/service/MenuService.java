@@ -6,6 +6,8 @@ import com.jiaxuan.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jiaxuan.entity.Menu;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -16,7 +18,7 @@ import com.jiaxuan.entity.Menu;
  */
 public interface MenuService extends IService<Menu> {
 
-    Result getAllMenus(String name);
+    List<Menu> getAllMenus(String name);
 
     Result getOneMenu(Integer id);
 

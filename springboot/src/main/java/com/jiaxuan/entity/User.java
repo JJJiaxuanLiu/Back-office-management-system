@@ -5,16 +5,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jiaxuan
@@ -26,59 +24,65 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      /**
+    /**
      * id
      */
-        @TableId(value = "id", type = IdType.AUTO)
-      private Integer id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
-      /**
+    /**
      * 用户名
      */
-      @Alias("用户名")
-      private String username;
+    @Alias("用户名")
+    private String username;
 
-      /**
+    /**
      * 密码
      */
-      @Alias("密码")
-      @JsonIgnore
-      private String password;
+    @Alias("密码")
+    @JsonIgnore
+    private String password;
 
-      /**
+    /**
      * 昵称
      */
-      @Alias("昵称")
-      private String nickname;
+    @Alias("昵称")
+    private String nickname;
 
-      /**
+    /**
      * 邮箱
      */
-      @Alias("邮箱")
-      private String email;
+    @Alias("邮箱")
+    private String email;
 
-      /**
+    /**
      * 电话
      */
-      @Alias("电话")
-      private String phone;
+    @Alias("电话")
+    private String phone;
 
-      /**
+    /**
      * 地址
      */
-      @Alias("地址")
-      private String address;
+    @Alias("地址")
+    private String address;
 
-      /**
+    /**
      * 创建时间
      */
-      @Alias("创建时间")
-      private Date createTime;
+    @Alias("创建时间")
+    private Date createTime;
 
-      /**
-      * 用户头像url
-      */
-      @Alias("用户头像url")
-      private String avatarUrl;
+    /**
+     * 用户头像url
+     */
+    @Alias("用户头像url")
+    private String avatarUrl;
+
+    /**
+     * 角色
+     */
+    @Alias("角色")
+    private String role;
 
 }

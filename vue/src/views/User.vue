@@ -29,6 +29,7 @@
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="id" width="80"></el-table-column>
             <el-table-column prop="username" label="用户名" width="140"></el-table-column>
+            <el-table-column prop="role" label="角色" width="140"></el-table-column>
             <el-table-column prop="nickname" label="昵称" width="120"></el-table-column>
             <el-table-column prop="email" label="邮箱"></el-table-column>
             <el-table-column prop="phone" label="电话"></el-table-column>
@@ -52,6 +53,11 @@
             <el-form :model="form" label-width="120px" size="small">
                 <el-form-item label="用户名">
                     <el-input v-model="form.username" autocomplete="off" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="角色">
+                    <el-select clearable v-model="form.role" palceholder="请选择角色" style="width: 100%">
+                        <el-option v-for="item in roles" :key="item.name" :lable="item.name" :value="item.flag"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="昵称">
                     <el-input v-model="form.nickname" autocomplete="off"></el-input>
@@ -91,6 +97,7 @@ export default {
             form: {},
             multipleSelection: [],
             newUserFlag: false,
+            roles: [],
         }
     },
 
@@ -115,6 +122,10 @@ export default {
                 this.tableData = res.records;
                 this.total = res.total;
             })
+
+            this.request.get('/role').then(res => {
+                this.roles = res.data
+            })
         },
 
         reset() {
@@ -134,7 +145,7 @@ export default {
             if (!this.newUserFlag) {
                 this.request.put("/user", this.form).then(res => {
                     if (res.code ==='200') {
-                        this.$message.success(res.msg);
+                        this.$message.success("保存成功！");
                         this.dialogFormVisible = false;
                         this.load();
                     } else {

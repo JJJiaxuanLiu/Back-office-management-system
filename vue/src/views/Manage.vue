@@ -2,7 +2,7 @@
   <div>
     <el-container style="height: 100vh">
       <el-aside :width="asideWidth + 'px'" style="background-color: rgb(238, 241, 246) ">
-        <Aside :isCollapse="isCollapse" :smallLogoShow="smallLogoShow" :textShow="textShow" :logoShow="logoShow"></Aside>
+        <Aside :isCollapse="isCollapse" :smallLogoShow="smallLogoShow" :textShow="textShow" :logoShow="logoShow" ></Aside>
       </el-aside>
 
       <el-container>

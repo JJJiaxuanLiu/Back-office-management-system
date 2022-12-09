@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import lombok.Data;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jiaxuan
@@ -23,41 +24,45 @@ public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-      /**
+    /**
      * id
      */
-      @TableId(value = "id", type = IdType.AUTO)
-      private Integer id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
-      /**
+    /**
      * 名称
      */
-      private String name;
+    private String name;
 
-      /**
+    /**
      * 路径
      */
-      private String path;
+    private String path;
 
-      /**
+    /**
      * 图标
      */
-      private String icon;
+    private String icon;
 
-      /**
+    /**
      * 描述
      */
-      private String description;
+    private String description;
 
-      /**
+    /**
      * 父级id
      */
-      private Integer pId;
+    private Integer pId;
+
+    /**
+     * 页面路径
+     */
+    private String pagePath;
 
 
-      @TableField(exist = false) //数据库表中没有该属性，忽略
-      private List<Menu> children;
-
+    @TableField(exist = false) //数据库表中没有该属性，忽略
+    private List<Menu> children;
 
 
 }

@@ -7,10 +7,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jiaxuan.commom.Constants;
 import com.jiaxuan.commom.Result;
 import com.jiaxuan.dto.UserDto;
+import com.jiaxuan.entity.Menu;
 import com.jiaxuan.entity.User;
 import com.jiaxuan.exception.ServiceException;
+import com.jiaxuan.mapper.MenuMapper;
+import com.jiaxuan.mapper.RoleMapper;
+import com.jiaxuan.mapper.RoleMenuMapper;
 import com.jiaxuan.mapper.UserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jiaxuan.service.MenuService;
 import com.jiaxuan.service.UserService;
 import com.jiaxuan.utils.TokenUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,6 +45,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
+
+    @Autowired
+    private RoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    private MenuService menuService;
+
     @Override
     public Result addUser(User user) {
         //判断是否数据库中存在相同用户名，不存在才save
@@ -175,6 +190,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 //生成设置token
                 String token = TokenUtils.generateToken(user.getId().toString(), user.getUsername());
                 userDto.setToken(token);
+
+                String role = userDto.getRole();   //ROLE_ADMIN
+
+                //设置用户菜单列表
+                List<Menu> roleMenus = getRoleMenus(role);
+                userDto.setMenus(roleMenus);
+
                 return Result.success("登录成功！",userDto);
             }
         }
@@ -212,6 +234,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }else {
             throw new ServiceException(Constants.CODE_500,"系统异常");
         }
+    }
+
+    /**
+     * 获取当前角色的菜单列表
+     * @param flag
+     * @return
+     */
+    private List<Menu> getRoleMenus(String flag){
+        Integer roleId = roleMapper.selectRoleIdByFlag(flag);
+        //当前角色所有菜单id集合
+        List<Integer> menuIdList = roleMenuMapper.selectByRoleId(roleId);
+        //查出系统所有菜单
+        List<Menu> menus =  menuService.getAllMenus("");
+        //new一个储存筛选完的list
+        List<Menu> menuList = new ArrayList<>();
+        //筛选当前用户角色菜单
+        for (Menu menu : menus) {
+            if(menuIdList.contains(menu.getId())){
+                menuList.add(menu);
+            }
+            List<Menu> children = menu.getChildren();
+            System.out.println("孩子是：------------------------------>" + children);
+            //移除children不在menuIdList集合中的元素
+            children.removeIf(child -> !menuIdList.contains(child.getId()));
+
+        }
+        return menuList;
     }
 
 

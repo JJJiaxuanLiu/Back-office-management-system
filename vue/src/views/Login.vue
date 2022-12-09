@@ -50,6 +50,7 @@ export default {
                     this.request.post("/user/login", this.user).then(res => {
                         if (res.code === '200') {
                             localStorage.setItem("user", JSON.stringify(res.data))  //将用户信息存入浏览器
+                            localStorage.setItem("menus", JSON.stringify(res.data.menus))  //将用户信息存入浏览器
                             this.$router.push("/");
                             this.$message.success(res.msg);
                         } else {

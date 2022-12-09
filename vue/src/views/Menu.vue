@@ -30,6 +30,7 @@
             <el-table-column prop="id" label="id" width="180"></el-table-column>
             <el-table-column prop="name" label="名称" ></el-table-column>
             <el-table-column prop="path" label="路径" ></el-table-column>
+            <el-table-column prop="pagePath" label="页面路径" ></el-table-column>
             <el-table-column label="图标" class-name="fontSize18" align="center" label-class-name="fontSize12">
                 <template slot-scope="scope">
                     <i :class="scope.row.icon"></i>
@@ -59,6 +60,9 @@
                 </el-form-item>
                 <el-form-item label="路径">
                     <el-input v-model="form.path" autocomplete="off" ></el-input>
+                </el-form-item>
+                <el-form-item label="页面路径">
+                    <el-input v-model="form.pagePath" autocomplete="off" ></el-input>
                 </el-form-item>
                 <el-form-item label="图标">
                     <template slot-scope="scope">
@@ -112,8 +116,10 @@ export default {
                 }
             }
             ).then(res => {
-                this.tableData = res.data
+                this.tableData = res.data;
+                console.log(res.data);
             })
+           
         },
 
         reset() {
