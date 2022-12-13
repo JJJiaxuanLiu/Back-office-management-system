@@ -61,6 +61,7 @@ export default {
             // localStorage.removeItem("user");
 
             this.$store.commit("logout")
+            localStorage.removeItem('menus')
             this.$message.success("退出成功！");
         }
     },

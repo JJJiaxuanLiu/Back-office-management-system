@@ -1,4 +1,4 @@
-import router from '@/router'
+import router, { resetRouter } from '@/router'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -17,6 +17,9 @@ const store = new Vuex.Store({
             localStorage.removeItem("user")
             localStorage.removeItem("menus")
             router.push("/login")
+
+            //重置路由
+            resetRouter()
         },
     }
 })
